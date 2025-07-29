@@ -1,47 +1,24 @@
 import * as React from "react";
-import * as GovUK from "govuk-react";
-import ReactModal from "react-modal";
 import CreateTaskForm from "./CreateTaskForm";
-
-const modalStyle = {
-  content: {
-    width: "500px",
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
-
-ReactModal.setAppElement("#root");
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 function AddTaskButton() {
-  const [modalIsOpen, setIsOpen] = React.useState(false);
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
+  const [open, setOpen] = React.useState(false);
 
   return (
-    <div>
-      <GovUK.Button onClick={openModal}>Add task</GovUK.Button>
-      <ReactModal
-        style={modalStyle}
-        isOpen={modalIsOpen}
-        contentLabel="Minimal Modal Example"
-      >
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button>Add task</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
         <CreateTaskForm />
-        <GovUK.Button onClick={closeModal} buttonColour={"#d4351c"}>
-          Cancel
-        </GovUK.Button>
-      </ReactModal>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

@@ -1,18 +1,10 @@
 import * as React from "react";
-import * as GovUK from "govuk-react";
-import ReactModal from "react-modal";
-
-const modalStyle = {
-  content: {
-    width: "500px",
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface Props {
   text: string;
@@ -20,34 +12,31 @@ interface Props {
   colour?: string;
 }
 
-ReactModal.setAppElement("#root");
-
 function ModalButton({ text, children, colour }: Props) {
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
 
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
+  const getButtonVariant = () => {
+    if (colour === "#d4351c") return "destructive";
+    if (colour === "#1d70b8") return "default";
+    return "default";
+  };
 
   return (
-    <div>
-      <GovUK.Button
-        buttonColour={colour ? colour : "#00703c"}
-        onClick={openModal}
-      >
-        {text}
-      </GovUK.Button>
-      <ReactModal style={modalStyle} isOpen={modalIsOpen}>
-        {children}
-        <GovUK.Button onClick={closeModal} buttonColour={"#1d70b8"}>
-          Close
-        </GovUK.Button>
-      </ReactModal>
-    </div>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant={getButtonVariant()} size="sm">
+          {text}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <div className="space-y-4">
+          {React.isValidElement(children) 
+            ? React.cloneElement(children, { onClose: () => setOpen(false) } as any)
+            : children
+          }
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

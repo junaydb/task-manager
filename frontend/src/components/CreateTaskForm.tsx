@@ -1,9 +1,13 @@
 import { useState } from "react";
-import * as GovUK from "govuk-react";
 import { useForm } from "react-hook-form";
 import { validateTitle, validateDueDate, validateDueTime } from "../validators";
 import { useCreateTask } from "../util/hooks";
 import { CreateTaskParams } from "../types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 // Round the time to the nearest next half hour
 function getRoundedTime() {
@@ -48,59 +52,56 @@ function CreateTaskForm() {
 
   if (!submittedData) {
     return (
-      <>
-        <GovUK.H3>Create task</GovUK.H3>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <GovUK.FormGroup error={errors.title ? true : false}>
-            <GovUK.Label>
-              <GovUK.LabelText>Title</GovUK.LabelText>
-
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Create task</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
               {errors.title && (
-                <GovUK.ErrorText>{errors.title.message}</GovUK.ErrorText>
+                <p className="text-sm text-red-600">{errors.title.message}</p>
               )}
-
-              <GovUK.Input
+              <Input
+                id="title"
                 {...register("title", { validate: validateTitle })}
+                className={errors.title ? "border-red-500" : ""}
               />
-            </GovUK.Label>
-          </GovUK.FormGroup>
+            </div>
 
-          <GovUK.FormGroup>
-            <GovUK.TextArea
-              hint="(Optional)"
-              input={{ ...register("description") }}
-            >
-              Description
-            </GovUK.TextArea>
-          </GovUK.FormGroup>
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <p className="text-sm text-muted-foreground">(Optional)</p>
+              <Textarea
+                id="description"
+                {...register("description")}
+              />
+            </div>
 
-          <GovUK.FormGroup error={errors.dueDate ? true : false}>
-            <GovUK.Label>
-              <GovUK.LabelText>Due date</GovUK.LabelText>
-
+            <div className="space-y-2">
+              <Label htmlFor="dueDate">Due date</Label>
               {errors.dueDate && (
-                <GovUK.ErrorText>{errors.dueDate.message}</GovUK.ErrorText>
+                <p className="text-sm text-red-600">{errors.dueDate.message}</p>
               )}
-
-              <GovUK.Input
+              <Input
+                id="dueDate"
                 type="date"
                 defaultValue={nowDateIso}
                 {...register("dueDate", {
                   validate: validateDueDate,
                 })}
+                className={errors.dueDate ? "border-red-500" : ""}
               />
-            </GovUK.Label>
-          </GovUK.FormGroup>
+            </div>
 
-          <GovUK.FormGroup error={errors.dueTime ? true : false}>
-            <GovUK.Label>
-              <GovUK.LabelText>Due time</GovUK.LabelText>
-
+            <div className="space-y-2">
+              <Label htmlFor="dueTime">Due time</Label>
               {errors.dueTime && (
-                <GovUK.ErrorText>{errors.dueTime.message}</GovUK.ErrorText>
+                <p className="text-sm text-red-600">{errors.dueTime.message}</p>
               )}
-
-              <GovUK.Input
+              <Input
+                id="dueTime"
                 type="time"
                 {...register("dueTime", {
                   validate: (time) => {
@@ -108,28 +109,36 @@ function CreateTaskForm() {
                     return validateDueTime(time, new Date(curDueDate));
                   },
                 })}
+                className={errors.dueTime ? "border-red-500" : ""}
               />
-            </GovUK.Label>
-          </GovUK.FormGroup>
+            </div>
 
-          <GovUK.Button type="submit">Submit</GovUK.Button>
-        </form>
-      </>
+            <Button type="submit" className="w-full">Submit</Button>
+          </form>
+        </CardContent>
+      </Card>
     );
   }
 
   if (submittedData) {
     return (
-      <div>
-        <GovUK.Panel title="Task created" />
-        <GovUK.Button
-          onClick={() => {
-            setSubmittedData(null);
-          }}
-        >
-          Add Another Task
-        </GovUK.Button>
-      </div>
+      <Card className="w-full max-w-md">
+        <CardContent className="pt-6">
+          <div className="text-center space-y-4">
+            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+              <h3 className="text-lg font-semibold text-green-800">Task created</h3>
+            </div>
+            <Button
+              onClick={() => {
+                setSubmittedData(null);
+              }}
+              className="w-full"
+            >
+              Add Another Task
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 

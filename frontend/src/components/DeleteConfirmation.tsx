@@ -1,33 +1,39 @@
 import { useState } from "react";
-import * as GovUK from "govuk-react";
 import { useDeleteTask } from "../util/hooks";
 import { DeleteTaskParams } from "../types";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   id: number;
+  onClose?: () => void;
 }
 
-function DeleteTaskConfirmation(id: Props) {
-  const [submittedData, setSubmittedData] = useState<DeleteTaskParams | null>(
-    null,
-  );
+function DeleteTaskConfirmation({ id, onClose }: Props) {
+  const [submittedData, setSubmittedData] = useState<DeleteTaskParams | null>(null);
 
   const { mutate } = useDeleteTask();
 
-  const onConfirm = (id: DeleteTaskParams) => {
-    setSubmittedData(id);
-    mutate(id!);
+  const onConfirm = () => {
+    const deleteParams = { id };
+    setSubmittedData(deleteParams);
+    mutate(deleteParams);
+    onClose?.();
   };
 
   if (!submittedData) {
     return (
-      <>
-        <GovUK.H3>Are you sure?</GovUK.H3>
-        <GovUK.HintText>This action cannot be undone</GovUK.HintText>
-        <div>
-          <GovUK.Button onClick={() => onConfirm(id)}>Confirm</GovUK.Button>
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Are you sure?</h3>
+        <p className="text-sm text-muted-foreground">This action cannot be undone</p>
+        <div className="flex space-x-2">
+          <Button variant="destructive" onClick={onConfirm} className="flex-1">
+            Confirm
+          </Button>
+          <Button variant="outline" onClick={onClose} className="flex-1">
+            Cancel
+          </Button>
         </div>
-      </>
+      </div>
     );
   }
 }

@@ -74,10 +74,10 @@ export function useGetNextPage(params: {
 }) {
   return useInfiniteQuery<TaskArrayResponse, AxiosError<ErrorPayload>>({
     queryKey: ["tasks", params],
-    queryFn: ({ pageParam }) => getNextPage({ ...params, cursor: pageParam }),
+    queryFn: ({ pageParam }) => getNextPage({ ...params, cursor: pageParam as string | undefined }),
     initialPageParam: null,
     getNextPageParam: (lastPage) => {
-      return lastPage.meta.cursor;
+      return lastPage.meta.cursor as string | undefined;
     },
   });
 }

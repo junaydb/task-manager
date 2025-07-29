@@ -1,4 +1,3 @@
-import * as GovUK from "govuk-react";
 import type { Status, SortBy, SortOrder } from "../types";
 import { useGetNextPage } from "../util/hooks";
 import { statusEnumToDisplay } from "../util/helpers";
@@ -6,7 +5,17 @@ import { useState } from "react";
 import ModalButton from "./ModalButton";
 import SelectStatusForm from "./SelectStatusForm";
 import DeleteTaskConfirmation from "./DeleteConfirmation";
-import "../style/globals.css";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+
+interface PageParamState {
+  sortBy: SortBy;
+  sortOrder: SortOrder;
+  pageSize: number;
+}
 
 function TaskSection({ status }: { status: Status }) {
   const [pageParams, setPageParams] = useState<PageParamState>({
@@ -30,102 +39,100 @@ function TaskSection({ status }: { status: Status }) {
   });
 
   if (isPending) {
-    return <GovUK.Paragraph>Loading tasks...</GovUK.Paragraph>;
+    return <p className="text-muted-foreground">Loading tasks...</p>;
   }
 
   return (
-    <>
-      <div className="task-section-header">
-        <GovUK.H3>{statusEnumToDisplay(status)}</GovUK.H3>
-        <div className="task-section-radios">
-          <GovUK.H4>Sort by:</GovUK.H4>
-          <GovUK.Radio sizeVariant="SMALL" value="created">
-            Created
-          </GovUK.Radio>
-          <GovUK.Radio sizeVariant="SMALL" value="dueDate">
-            Due date
-          </GovUK.Radio>
-        </div>
-      </div>
-
-      <div className="tasks-table">
-        <div className="tasks-header-row">
-          <div className="tasks-cell" style={{ width: "25%" }}>
-            Title
-          </div>
-          <div className="tasks-cell" style={{ width: "50%" }}>
-            Description
-          </div>
-          <div className="tasks-cell" style={{ width: "12.5%" }}>
-            Due date
-          </div>
-          <div className="tasks-cell" style={{ width: "12.5%" }}>
-            Created at
-          </div>
-          <div className="tasks-cell" style={{ width: "12.5%" }}></div>
-          <div className="tasks-cell" style={{ width: "12.5%" }}></div>
-        </div>
-        {data?.pages.map((page) =>
-          page.data.tasks.map((task) => {
-            const dueDate = new Date(task.due_date);
-            const dueDateStr = dueDate.toLocaleDateString();
-            const dueTimeStr = dueDate.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
-            const createdDate = new Date(task.created_at);
-            const createdDateStr = createdDate.toLocaleDateString();
-            const createdTimeStr = createdDate.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
-
-            return (
-              <div key={task.id} className="tasks-row">
-                <div className="tasks-cell">{task.title}</div>
-                <div className="tasks-cell">{task.description}</div>
-                <div className="tasks-cell">
-                  {dueDateStr}, {dueTimeStr}
-                </div>
-                <div className="tasks-cell">
-                  {createdDateStr}, {createdTimeStr}
-                </div>
-                <div className="tasks-cell">
-                  <ModalButton text="Move" colour="#1d70b8">
-                    <SelectStatusForm id={task.id} status={status} />
-                  </ModalButton>
-                </div>
-                <div className="tasks-cell">
-                  <ModalButton text="Delete" colour="#d4351c">
-                    <DeleteTaskConfirmation id={task.id} />
-                  </ModalButton>
-                </div>
-              </div>
-            );
-          }),
-        )}
-      </div>
-
-      {hasNextPage && (
-        <div className="pagination-controls">
-          <GovUK.Button onClick={fetchNextPage}>Load more</GovUK.Button>
-
-          <GovUK.Select
-            input={{
-              name: "group1",
-              value: String(pageParams.pageSize),
-              onChange: handlePageSizeChange,
-            }}
-            label=""
-            className="drop-down"
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>{statusEnumToDisplay(status)}</CardTitle>
+        <div className="flex items-center space-x-4">
+          <Label className="text-sm font-medium">Sort by:</Label>
+          <RadioGroup
+            value={pageParams.sortBy}
+            onValueChange={(value: SortBy) => handleSortByChange(value)}
+            className="flex space-x-4"
           >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-          </GovUK.Select>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="created" id={`created-${status}`} />
+              <Label htmlFor={`created-${status}`} className="text-sm">Created</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="dueDate" id={`dueDate-${status}`} />
+              <Label htmlFor={`dueDate-${status}`} className="text-sm">Due date</Label>
+            </div>
+          </RadioGroup>
         </div>
-      )}
-    </>
+      </CardHeader>
+      <CardContent>
+
+        <div className="space-y-3">
+          {data?.pages.map((page) =>
+            page.data.tasks.map((task) => {
+              const dueDate = new Date(task.due_date);
+              const dueDateStr = dueDate.toLocaleDateString();
+              const dueTimeStr = dueDate.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+              const createdDate = new Date(task.created_at);
+              const createdDateStr = createdDate.toLocaleDateString();
+              const createdTimeStr = createdDate.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+
+              return (
+                <Card key={task.id} className="p-4">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1 space-y-2">
+                      <h4 className="font-medium">{task.title}</h4>
+                      {task.description && (
+                        <p className="text-sm text-muted-foreground">{task.description}</p>
+                      )}
+                      <div className="flex space-x-4 text-xs text-muted-foreground">
+                        <span>Due: {dueDateStr}, {dueTimeStr}</span>
+                        <span>Created: {createdDateStr}, {createdTimeStr}</span>
+                      </div>
+                    </div>
+                    <div className="flex space-x-2 ml-4">
+                      <ModalButton text="Move" colour="#1d70b8">
+                        <SelectStatusForm id={task.id} status={status} />
+                      </ModalButton>
+                      <ModalButton text="Delete" colour="#d4351c">
+                        <DeleteTaskConfirmation id={task.id} />
+                      </ModalButton>
+                    </div>
+                  </div>
+                </Card>
+              );
+            }),
+          )}
+        </div>
+
+        {hasNextPage && (
+          <div className="flex items-center justify-between mt-4 pt-4 border-t">
+            <Button onClick={() => fetchNextPage()}>Load more</Button>
+            <div className="flex items-center space-x-2">
+              <Label className="text-sm">Page size:</Label>
+              <Select
+                value={String(pageParams.pageSize)}
+                onValueChange={(value) => handlePageSizeChange({ target: { value } } as React.ChangeEvent<HTMLSelectElement>)}
+              >
+                <SelectTrigger className="w-20">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="5">5</SelectItem>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="20">20</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
