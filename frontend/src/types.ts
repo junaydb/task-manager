@@ -8,6 +8,17 @@ export type Status = "TODO" | "IN_PROGRESS" | "DONE";
 export type SortBy = "created" | "dueDate";
 export type SortOrder = "ASC" | "DESC";
 
+// Generic API response structure
+export interface ApiResponse<T = any> {
+  success: boolean;
+  data: T;
+}
+
+// API response with pagination metadata
+export interface ApiResponseWithMeta<T = any> extends ApiResponse<T> {
+  meta: { cursor: string | null };
+}
+
 export type Task = {
   id: number;
   title: string;
@@ -17,30 +28,15 @@ export type Task = {
   created_at: Date;
 };
 
-export interface TaskResponse {
-  success: boolean;
-  data: Task;
-}
+export interface TaskResponse extends ApiResponse<Task> {}
 
-export interface TaskArrayResponse {
-  success: boolean;
-  data: { tasks: Task[] };
-  meta: { cursor: string | null };
-}
+export interface TaskArrayResponse extends ApiResponseWithMeta<{ tasks: Task[] }> {}
 
-export interface UpdateTaskResponse {
-  success: boolean;
-  data: { newStatus: Status };
-}
+export interface UpdateTaskResponse extends ApiResponse<{ newStatus: Status }> {}
 
-export interface NoContentResponse {
-  success: boolean;
-}
+export interface NoContentResponse extends Omit<ApiResponse, 'data'> {}
 
-export interface TaskCountResponse {
-  success: boolean;
-  data: { count: number };
-}
+export interface TaskCountResponse extends ApiResponse<{ count: number }> {}
 
 type ErrorMessage = {
   param: string;
@@ -68,6 +64,5 @@ export type IdParam = {
   id: number;
 };
 
-export type DeleteTaskParams = {
-  id: number;
-};
+// Use IdParam instead of DeleteTaskParams for consistency
+export type DeleteTaskParams = IdParam;

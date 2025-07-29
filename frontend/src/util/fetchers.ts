@@ -10,11 +10,40 @@ import type {
   TaskCountResponse,
   TaskArrayResponse,
 } from "../types";
-import type { AxiosResponse } from "axios";
+import { combineDateAndTimeToISO } from "./helpers";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000/api/tasks",
+  baseURL:
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/tasks",
 });
+
+api.interceptors.request.use(
+  (config) => {
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      console.error("Unauthorized access");
+    } else if (error.response?.status === 404) {
+      console.error("Resource not found");
+    } else if (error.response?.status >= 500) {
+      console.error("Server error");
+    } else if (!error.response) {
+      console.error("Network error - please check your connection");
+    }
+
+    return Promise.reject(error);
+  },
+);
 
 export async function createTask(params: {
   title: string;
@@ -22,11 +51,9 @@ export async function createTask(params: {
   dueTime: string;
   description?: string;
 }): Promise<TaskResponse> {
-  const isoDateTime = new Date(
-    `${params.dueDate}T${params.dueTime}`,
-  ).toISOString();
+  const isoDateTime = combineDateAndTimeToISO(params.dueDate, params.dueTime);
   return api
-    .post<TaskResponse, AxiosResponse<TaskResponse>>("", {
+    .post<TaskResponse>("", {
       title: params.title,
       description: params.description,
       due_date: isoDateTime,
@@ -39,19 +66,14 @@ export async function updateTaskStatus(params: {
   status: Status;
 }): Promise<UpdateTaskResponse> {
   return api
-    .patch<UpdateTaskResponse, AxiosResponse<UpdateTaskResponse>>(
-      `/status/${params.id}`,
-      {
-        status: params.status,
-      },
-    )
+    .patch<UpdateTaskResponse>(`/status/${params.id}`, {
+      status: params.status,
+    })
     .then((res) => res.data);
 }
 
 export async function deleteTask({ id }: IdParam): Promise<NoContentResponse> {
-  return api
-    .delete<NoContentResponse, AxiosResponse<NoContentResponse>>(`/${id}`)
-    .then((res) => res.data);
+  return api.delete<NoContentResponse>(`/${id}`).then((res) => res.data);
 }
 
 export async function getNextPage(params: {
@@ -62,7 +84,7 @@ export async function getNextPage(params: {
   cursor?: string;
 }): Promise<TaskArrayResponse> {
   return api
-    .get<TaskArrayResponse, AxiosResponse<TaskArrayResponse>>(`/page`, {
+    .get<TaskArrayResponse>(`/page`, {
       params: {
         status: params.status,
         sortBy: params.sortBy,
@@ -75,13 +97,9 @@ export async function getNextPage(params: {
 }
 
 export async function getTaskById({ id }: IdParam): Promise<TaskResponse> {
-  return api
-    .get<TaskResponse, AxiosResponse<TaskResponse>>(`/${id}`)
-    .then((res) => res.data);
+  return api.get<TaskResponse>(`/${id}`).then((res) => res.data);
 }
 
 export async function getTaskCount(): Promise<TaskCountResponse> {
-  return api
-    .get<TaskCountResponse, AxiosResponse<TaskCountResponse>>("/count")
-    .then((res) => res.data);
+  return api.get<TaskCountResponse>("/count").then((res) => res.data);
 }
