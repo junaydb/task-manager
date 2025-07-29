@@ -15,13 +15,15 @@ This is a React + TypeScript frontend application for a task management system t
 
 ## Current Project Goal
 
-The current goal of this project is to repurpose it. Originally, this project was created as a development test.
-I now want to rehaul the ui. In order to do this, I want to do the following:
+The current goal of this project is to rehaul the ui and add missing functionality.
+Originally, this project was created as a development test.
+I now want to rehaul and add missing functionality to the ui. In order to do this, I want to do the following:
 
 - Remove all GovUK components and replace them with shdacn based components
+- Add missing ui error fallbacks, for example, ui fallbacks for when the database connection fails
 - Create a more modern ui, something similar to Jira
 - The ui should look and do the following:
-  - A 3 column layout, similar to Jira, each column from left to right will be:
+  - A 3 column kanban layout, each column from left to right will be:
     - To do, In progress, Done
   - Tasks should be able to be dragged between columnns
 
@@ -59,11 +61,10 @@ src/
 
 ### Key Patterns
 
-1. **Component Structure**: Components use GOV.UK React library for consistent styling
-2. **Form Handling**: React Hook Form with custom validators for title, date, and time validation
-3. **State Management**: Server state handled by TanStack Query, local UI state with useState
-4. **Error Handling**: Axios errors typed with custom `ErrorPayload` interface
-5. **Time Handling**: Custom time rounding logic for 30-minute intervals
+1. **Form Handling**: React Hook Form with custom validators for title, date, and time validation
+2. **State Management**: Server state handled by TanStack Query, local UI state with useState
+3. **Error Handling**: Axios errors typed with custom `ErrorPayload` interface
+4. **Time Handling**: Custom time rounding logic for 30-minute intervals
 
 ### Path Aliases
 
