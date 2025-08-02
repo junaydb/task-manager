@@ -1,5 +1,11 @@
 export function validateTitle(value?: string) {
-  return value ? true : "A title is required";
+  if (!value) {
+    return "A title is required";
+  }
+  if (value.length > 100) {
+    return "Cannot contain more than 100 characters";
+  }
+  return true;
 }
 
 export function validateDueDate(date: string): true | string {
