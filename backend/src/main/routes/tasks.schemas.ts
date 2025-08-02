@@ -22,7 +22,8 @@ export const TaskIdParamSchema = z.object({
 export const CreateTaskSchema = z.object({
   title: z
     .string({ message: "Title is required" })
-    .min(1, { message: "Title cannot be blank" }),
+    .min(1, { message: "Title cannot be blank" })
+    .max(100, { message: "Title cannot contain more than 100 characters" }),
   description: z.string().optional(),
   status: StatusEnum.default("TODO"),
   due_date: DateSchema.refine(
