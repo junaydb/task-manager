@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { validateTitle, validateDueDate, validateDueTime } from "../validators";
+import {
+  validateTitle,
+  validateDescription,
+  validateDueDate,
+  validateDueTime,
+} from "../validators";
 import { useCreateTask } from "../util/hooks";
 import { CreateTaskParams } from "../types";
 import { Button } from "@/components/ui/button";
@@ -75,7 +80,7 @@ function CreateTaskForm() {
               <p className="text-sm text-muted-foreground">(Optional)</p>
               <Textarea
                 id="description"
-                {...register("description")}
+                {...register("description", { validate: validateDescription })}
               />
             </div>
 
@@ -113,7 +118,9 @@ function CreateTaskForm() {
               />
             </div>
 
-            <Button type="submit" className="w-full">Submit</Button>
+            <Button type="submit" className="w-full">
+              Submit
+            </Button>
           </form>
         </CardContent>
       </Card>
@@ -125,8 +132,10 @@ function CreateTaskForm() {
       <Card className="w-full max-w-md">
         <CardContent className="pt-6">
           <div className="text-center space-y-4">
-            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-              <h3 className="text-lg font-semibold text-green-800">Task created</h3>
+            <div className="p-4 bg-green-50 border border-green-200 rounded-xs">
+              <h3 className="text-lg font-semibold text-green-800">
+                Task created
+              </h3>
             </div>
             <Button
               onClick={() => {

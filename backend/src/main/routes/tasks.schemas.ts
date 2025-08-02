@@ -24,7 +24,12 @@ export const CreateTaskSchema = z.object({
     .string({ message: "Title is required" })
     .min(1, { message: "Title cannot be blank" })
     .max(100, { message: "Title cannot contain more than 100 characters" }),
-  description: z.string().optional(),
+  description: z
+    .string()
+    .max(10000, {
+      message: "Description cannot contain more than 10000 characters",
+    })
+    .optional(),
   status: StatusEnum.default("TODO"),
   due_date: DateSchema.refine(
     (date) => {

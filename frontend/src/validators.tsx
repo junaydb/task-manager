@@ -8,6 +8,13 @@ export function validateTitle(value?: string) {
   return true;
 }
 
+export function validateDescription(value?: string) {
+  if (value && value.length > 10000) {
+    return "Cannot contain more than 10000 characters";
+  }
+  return true;
+}
+
 export function validateDueDate(date: string): true | string {
   const selected = new Date(date);
   selected.setHours(0, 0, 0, 0);
