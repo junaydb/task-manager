@@ -1,5 +1,7 @@
 ## Task Manager (DTS Dev Test Submission)
 
+This project was originally created for a developer test. This branch is an archive of my submission.
+
 ## Table of Contents
 
 1. [Running the app](#how-to)
