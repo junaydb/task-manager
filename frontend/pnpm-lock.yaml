@@ -56,9 +56,6 @@ dependencies:
   tailwindcss:
     specifier: ^4.1.11
     version: 4.1.11
-  zod:
-    specifier: ^4.0.13
-    version: 4.0.13
 
 devDependencies:
   '@eslint/js':
@@ -3112,7 +3109,3 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
-
-  /zod@4.0.13:
-    resolution: {integrity: sha512-jv+zRxuZQxTrFHzxZ46ezL2FtnE+M4HIJHJEwLsZ7UjrXHltdG6HrxvqM0twoVCWxJiYf8WqKjAcjztegpkB+Q==}
-    dev: false

@@ -15,7 +15,8 @@ interface Props {
 
 function SelectStatusForm({ id, status, onClose }: Props) {
   const [selectedStatus, setSelectedStatus] = useState<Status | "">("");
-  const [submittedData, setSubmittedData] = useState<UpdateTaskStatusParams | null>(null);
+  const [submittedData, setSubmittedData] =
+    useState<UpdateTaskStatusParams | null>(null);
 
   const { mutate } = useUpdateTaskStatus();
 
@@ -32,11 +33,8 @@ function SelectStatusForm({ id, status, onClose }: Props) {
     return (
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">Select new status</h3>
-        <form onSubmit={onSubmit} className="space-y-4">
-          <div className="space-y-3">
-            {!selectedStatus && (
-              <p className="text-sm text-red-600">An option must be selected</p>
-            )}
+        <form onSubmit={onSubmit} className="space-y-6">
+          <div>
             <RadioGroup
               value={selectedStatus}
               onValueChange={(value: Status) => setSelectedStatus(value)}
@@ -44,9 +42,7 @@ function SelectStatusForm({ id, status, onClose }: Props) {
               {getSetStatusOptions(status).map((option) => (
                 <div key={option} className="flex items-center space-x-2">
                   <RadioGroupItem value={option} id={option} />
-                  <Label htmlFor={option}>
-                    {statusEnumToDisplay(option)}
-                  </Label>
+                  <Label htmlFor={option}>{statusEnumToDisplay(option)}</Label>
                 </div>
               ))}
             </RadioGroup>

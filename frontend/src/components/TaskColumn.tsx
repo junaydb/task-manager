@@ -16,7 +16,7 @@ const columnProps = {
     title: "Done",
     className: "border-green-300 bg-green-50",
   },
-} as const;
+};
 
 function TaskColumn({ status }: { status: Status }) {
   const { isPending, data, hasNextPage } = useGetNextPage({
@@ -33,7 +33,7 @@ function TaskColumn({ status }: { status: Status }) {
   if (isPending) {
     return (
       <div
-        className={`flex flex-col h-full min-h-[600px] rounded-lg border-2 ${props.className} p-4`}
+        className={`flex flex-col h-full min-h-[600px] rounded-xs border-2 ${props.className} p-4`}
       >
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-lg">{props.title}</h3>
@@ -50,7 +50,7 @@ function TaskColumn({ status }: { status: Status }) {
 
   return (
     <div
-      className={`flex flex-col h-full min-h-[600px] rounded-lg border-2 ${props.className} p-4`}
+      className={`flex flex-col h-full min-h-[600px] rounded-xs border-2 ${props.className} p-4`}
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-lg">{props.title}</h3>
@@ -65,9 +65,7 @@ function TaskColumn({ status }: { status: Status }) {
             No tasks yet
           </div>
         ) : (
-          allTasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
-          ))
+          allTasks.map((task) => <TaskCard key={task.id} task={task} />)
         )}
       </div>
     </div>

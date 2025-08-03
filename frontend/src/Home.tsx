@@ -6,7 +6,7 @@ function Home() {
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">Task Manager</h2>
+        <h2 className="text-3xl font-bold">Your Board</h2>
         <ModalButton text="Create task">
           <CreateTaskForm />
         </ModalButton>

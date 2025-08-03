@@ -31,12 +31,12 @@ import { AxiosError } from "axios";
 // Query key factory for consistent key management
 const queryKeys = {
   tasks: {
-    all: ["tasks"] as const,
-    lists: () => [...queryKeys.tasks.all, "list"] as const,
-    list: (params: object) => [...queryKeys.tasks.lists(), params] as const,
-    details: () => [...queryKeys.tasks.all, "detail"] as const,
-    detail: (id: number) => [...queryKeys.tasks.details(), id] as const,
-    count: () => [...queryKeys.tasks.all, "count"] as const,
+    all: ["tasks"],
+    lists: () => [...queryKeys.tasks.all, "list"],
+    list: (params: object) => [...queryKeys.tasks.lists(), params],
+    details: () => [...queryKeys.tasks.all, "detail"],
+    detail: (id: number) => [...queryKeys.tasks.details(), id],
+    count: () => [...queryKeys.tasks.all, "count"],
   },
 };
 
