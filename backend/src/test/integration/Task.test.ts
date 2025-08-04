@@ -1,11 +1,11 @@
 import { describe, expect, it, beforeAll, afterAll } from "vitest";
-import { pool } from "../../main/db";
-import Task from "../../main/models/Task";
-import { TaskNotFoundError } from "../../main/util/errors";
+import { pool } from "../../main/db/index.js";
+import Task from "../../main/models/Task.js";
+import { TaskNotFoundError } from "../../main/util/errors.js";
 import type {
   status,
   IInsertTaskParams,
-} from "../../main/queries/taskQueries.queries";
+} from "../../main/queries/taskQueries.queries.js";
 import { insertTask } from "../../main/queries/taskQueries.queries.js";
 
 const TASK_COUNT = 50;

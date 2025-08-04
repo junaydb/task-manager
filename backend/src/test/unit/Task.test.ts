@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
-import Task from "../../main/models/Task";
-import { TaskNotFoundError } from "../../main/util/errors";
-import type { status } from "../../main/queries/taskQueries.queries";
+import Task from "../../main/models/Task.js";
+import { TaskNotFoundError } from "../../main/util/errors.js";
+import type { status } from "../../main/queries/taskQueries.queries.js";
 import {
   getAllTasks,
   findById,
