@@ -7,8 +7,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, CalendarPlus, Clock } from "lucide-react";
+import { Calendar, CalendarPlus, Clock, Edit, Trash2 } from "lucide-react";
 import type { Task, Status } from "../types";
 import ModalButton from "./ModalButton";
 import SelectStatusForm from "./SelectStatusForm";
@@ -35,6 +41,8 @@ interface TaskCardProps {
 
 function TaskCard({ task }: TaskCardProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const dueDate = new Date(task.due_date);
   const dueDateStr = dueDate.toLocaleDateString();
@@ -48,92 +56,128 @@ function TaskCard({ task }: TaskCardProps) {
   const props = columnProps[task.status as Status];
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Card className="cursor-pointer hover:shadow-md transition-shadow duration-200 bg-white border border-gray-200">
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="font-medium text-sm line-clamp-1 max-w-3/5">
+    <>
+      <ContextMenu>
+        <ContextMenuTrigger className="block">
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+              <Card className="cursor-pointer hover:shadow-md transition-shadow duration-200 bg-white border border-gray-200">
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-sm line-clamp-1 max-w-3/5">
+                        {task.title}
+                      </h4>
+                      <Badge
+                        variant="secondary"
+                        className={`-mb-2 text-xs ${props.badgeClassName}`}
+                      >
+                        {props.title}
+                      </Badge>
+                    </div>
+
+                    {task.description && (
+                      <p className="text-xs text-muted-foreground line-clamp-1 max-w-3/4">
+                        {task.description}
+                      </p>
+                    )}
+
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3 text-blue-500 mb-0.5" />{" "}
+                        {dueDateStr}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-green-500 mb-[0.1rem]" />{" "}
+                        {dueTimeStr}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </DialogTrigger>
+
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle className="text-xl max-w-[90%]">
                   {task.title}
-                </h4>
-                <Badge
-                  variant="secondary"
-                  className={`-mb-2 text-xs ${props.badgeClassName}`}
-                >
-                  {props.title}
-                </Badge>
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-6">
+                <div className="flex items-center gap-2">
+                  <Badge className={props.badgeClassName}>{props.title}</Badge>
+                </div>
+
+                {task.description && (
+                  <div>
+                    <h4 className="font-medium mb-2">Description</h4>
+                    <p className="text-muted-foreground">{task.description}</p>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-medium mb-2 flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-blue-500" /> Due at
+                    </h4>
+                    <p className="text-muted-foreground">
+                      {dueDateStr} at {dueTimeStr}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium mb-2 flex items-center gap-2">
+                      <CalendarPlus className="w-4 h-4 text-purple-500" /> Created on
+                    </h4>
+                    <p className="text-muted-foreground">{createdDateStr}</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-4 border-t">
+                  <ModalButton text="Change status" variant="default">
+                    <SelectStatusForm id={task.id} status={task.status} />
+                  </ModalButton>
+                  <ModalButton text="Delete" variant="destructive">
+                    <DeleteTaskConfirmation id={task.id} />
+                  </ModalButton>
+                </div>
               </div>
+            </DialogContent>
+          </Dialog>
+        </ContextMenuTrigger>
+        
+        <ContextMenuContent>
+          <ContextMenuItem 
+            onClick={() => setIsStatusModalOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <Edit className="w-4 h-4" />
+            Change status
+          </ContextMenuItem>
+          <ContextMenuItem 
+            onClick={() => setIsDeleteModalOpen(true)}
+            className="flex items-center gap-2 text-red-600"
+          >
+            <Trash2 className="w-4 h-4" />
+            Delete
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
 
-              {task.description && (
-                <p className="text-xs text-muted-foreground line-clamp-1 max-w-3/4">
-                  {task.description}
-                </p>
-              )}
+      {/* Separate modals for context menu actions */}
+      <Dialog open={isStatusModalOpen} onOpenChange={setIsStatusModalOpen}>
+        <DialogContent>
+          <SelectStatusForm id={task.id} status={task.status} />
+        </DialogContent>
+      </Dialog>
 
-              <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-3 h-3 text-blue-500 mb-0.5" />{" "}
-                  {dueDateStr}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-green-500 mb-[0.1rem]" />{" "}
-                  {dueTimeStr}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </DialogTrigger>
-
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-xl max-w-[90%]">
-            {task.title}
-          </DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-6">
-          <div className="flex items-center gap-2">
-            <Badge className={props.badgeClassName}>{props.title}</Badge>
-          </div>
-
-          {task.description && (
-            <div>
-              <h4 className="font-medium mb-2">Description</h4>
-              <p className="text-muted-foreground">{task.description}</p>
-            </div>
-          )}
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <h4 className="font-medium mb-2 flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-blue-500" /> Due at
-              </h4>
-              <p className="text-muted-foreground">
-                {dueDateStr} at {dueTimeStr}
-              </p>
-            </div>
-
-            <div>
-              <h4 className="font-medium mb-2 flex items-center gap-2">
-                <CalendarPlus className="w-4 h-4 text-purple-500" /> Created on
-              </h4>
-              <p className="text-muted-foreground">{createdDateStr}</p>
-            </div>
-          </div>
-
-          <div className="flex gap-2 pt-4 border-t">
-            <ModalButton text="Change status" variant="default">
-              <SelectStatusForm id={task.id} status={task.status} />
-            </ModalButton>
-            <ModalButton text="Delete" variant="destructive">
-              <DeleteTaskConfirmation id={task.id} />
-            </ModalButton>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent>
+          <DeleteTaskConfirmation id={task.id} />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
