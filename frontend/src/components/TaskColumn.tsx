@@ -1,7 +1,9 @@
 import type { Status } from "../types";
 import { useGetNextPage } from "../util/hooks";
 import TaskCard from "./TaskCard";
-import ViewAllTasksModal from "./ViewAllTasksModal";
+import LoadingSpinner from "./LoadingSpinner";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 const columnProps = {
   TODO: {
@@ -19,16 +21,24 @@ const columnProps = {
 };
 
 function TaskColumn({ status }: { status: Status }) {
-  const { isPending, data, hasNextPage } = useGetNextPage({
-    status,
-    sortBy: "created",
-    sortOrder: "DESC",
-    pageSize: 5,
-  });
+  const { isPending, data, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useGetNextPage({
+      status,
+      sortBy: "created",
+      sortOrder: "DESC",
+      pageSize: 10,
+    });
 
   const props = columnProps[status];
+  const { ref, inView } = useInView();
 
   const allTasks = data?.pages.flatMap((page) => page.data.tasks) || [];
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
 
   if (isPending) {
     return (
@@ -51,9 +61,6 @@ function TaskColumn({ status }: { status: Status }) {
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-lg">{props.title}</h3>
-        {hasNextPage && (
-          <ViewAllTasksModal status={status} title={props.title} />
-        )}
       </div>
 
       <div className="flex-1 space-y-3 overflow-y-auto">
@@ -62,7 +69,16 @@ function TaskColumn({ status }: { status: Status }) {
             No tasks yet
           </div>
         ) : (
-          allTasks.map((task) => <TaskCard key={task.id} task={task} />)
+          <>
+            {allTasks.map((task) => (
+              <TaskCard key={task.id} task={task} />
+            ))}
+            {hasNextPage && (
+              <div ref={ref} className="flex items-center justify-center py-4">
+                {isFetchingNextPage && <LoadingSpinner />}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
