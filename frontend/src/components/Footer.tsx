@@ -4,7 +4,6 @@ import axios from "axios";
 export default function Footer() {
   const [lastCommitTime, setLastCommitTime] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const year = new Date().getFullYear();
 
   useEffect(() => {
     const fetchLastCommitTime = async () => {
