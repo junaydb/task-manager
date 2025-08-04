@@ -1,10 +1,10 @@
-import Task from "../models/task";
+import Task from "../models/Task.js";
 import {
   ByCreatedCursorSchema,
   ByDueDateCursorSchema,
-} from "../routes/tasks.schemas";
-import type { IGetAllTasksResult as ITask } from "../queries/taskQueries.queries";
-import type { ByCreatedCursor, ByDueDateCursor, Cursors } from "./types";
+} from "../routes/tasks.schemas.js";
+import type { IGetAllTasksResult as ITask } from "../queries/taskQueries.queries.js";
+import type { ByCreatedCursor, ByDueDateCursor, Cursors } from "./types.js";
 
 export function decodeCursor(cursor: string) {
   return JSON.parse(Buffer.from(cursor, "base64").toString());

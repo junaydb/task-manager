@@ -75,7 +75,6 @@ tasks.get("/page", async (c: Context) => {
   if (nextPageExists) {
     const lastTask = page[page.length - 1];
     const cursor = sortStrat.getNextCursor(lastTask);
-    console.log(cursor);
     nextCursor = pagination.encodeCursor(cursor);
   }
 

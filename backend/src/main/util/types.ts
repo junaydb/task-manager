@@ -3,7 +3,7 @@ import {
   ByCreatedCursorSchema,
   ByDueDateCursorSchema,
   SortOrderSchema,
-} from "../routes/tasks.schemas";
+} from "../routes/tasks.schemas.js";
 
 export type ByCreatedCursor = z.infer<typeof ByCreatedCursorSchema>;
 export type ByDueDateCursor = z.infer<typeof ByDueDateCursorSchema>;
