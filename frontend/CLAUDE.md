@@ -40,7 +40,6 @@ I now want to rehaul and add missing functionality to the ui. In order to do thi
 src/
 ├── components/          # React components
 │   ├── CreateTaskForm.tsx    # Main task creation form
-│   ├── TaskSection.tsx       # Task list sections by status
 │   ├── ModalButton.tsx       # Reusable modal wrapper
 │   └── ...
 ├── util/
