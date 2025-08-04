@@ -47,7 +47,7 @@ function ViewAllTasksModal({ status, title }: ViewAllTasksModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={handleModalChange}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="text-sm">
+        <Button size="sm" className="text-xs">
           View all
         </Button>
       </DialogTrigger>
@@ -102,4 +102,3 @@ function ViewAllTasksModal({ status, title }: ViewAllTasksModalProps) {
 }
 
 export default ViewAllTasksModal;
-

@@ -1,40 +1,26 @@
 import * as React from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { type VariantProps } from "class-variance-authority";
 
 interface Props {
   text: string;
   children: React.ReactNode;
-  colour?: string;
+  variant?: VariantProps<typeof buttonVariants>["variant"];
 }
 
-function ModalButton({ text, children, colour }: Props) {
+function ModalButton({ text, children, variant = "default" }: Props) {
   const [open, setOpen] = React.useState(false);
-
-  const getButtonVariant = () => {
-    if (colour === "#d4351c") return "destructive";
-    if (colour === "#1d70b8") return "default";
-    return "default";
-  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={getButtonVariant()} size="sm">
+        <Button variant={variant} size="sm">
           {text}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
-        <div className="space-y-4">
-          {React.isValidElement(children) 
-            ? React.cloneElement(children, { onClose: () => setOpen(false) } as any)
-            : children
-          }
-        </div>
+        <div className="space-y-4">{children}</div>
       </DialogContent>
     </Dialog>
   );

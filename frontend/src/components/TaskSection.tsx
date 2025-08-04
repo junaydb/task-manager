@@ -96,10 +96,10 @@ function TaskSection({ status }: { status: Status }) {
                       </div>
                     </div>
                     <div className="flex space-x-2 ml-4">
-                      <ModalButton text="Move" colour="#1d70b8">
+                      <ModalButton text="Move" variant="default">
                         <SelectStatusForm id={task.id} status={status} />
                       </ModalButton>
-                      <ModalButton text="Delete" colour="#d4351c">
+                      <ModalButton text="Delete" variant="destructive">
                         <DeleteTaskConfirmation id={task.id} />
                       </ModalButton>
                     </div>

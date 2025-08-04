@@ -37,9 +37,6 @@ function TaskColumn({ status }: { status: Status }) {
       >
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-lg">{props.title}</h3>
-          <span className="text-sm text-muted-foreground bg-white px-2 py-1 rounded">
-            0
-          </span>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <p className="text-muted-foreground">Loading tasks...</p>

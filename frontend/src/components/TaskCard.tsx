@@ -124,10 +124,10 @@ function TaskCard({ task }: TaskCardProps) {
           </div>
 
           <div className="flex gap-2 pt-4 border-t">
-            <ModalButton text="Move" colour="#1d70b8">
+            <ModalButton text="Change status" variant="default">
               <SelectStatusForm id={task.id} status={task.status} />
             </ModalButton>
-            <ModalButton text="Delete" colour="#d4351c">
+            <ModalButton text="Delete" variant="destructive">
               <DeleteTaskConfirmation id={task.id} />
             </ModalButton>
           </div>
