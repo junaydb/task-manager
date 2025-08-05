@@ -30,7 +30,7 @@ const tasks = new Hono();
  */
 tasks.get("/all", async (c: Context) => {
   const allTasks = await Task.getAll();
-  return c.json(successResponse(allTasks), 200);
+  return c.json(successResponse({ tasks: allTasks }), 200);
 });
 
 /**
