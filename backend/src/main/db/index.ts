@@ -6,7 +6,7 @@ dotenv.config({ path: [".env.local", ".env"] });
 let pool: pg.Pool;
 if (process.env.DB_PROD === "true") {
   pool = new pg.Pool({
-    database: "task_manager",
+    database: "kanban_board",
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     password: process.env.DB_PASSWORD,
@@ -14,7 +14,7 @@ if (process.env.DB_PROD === "true") {
   });
 } else {
   pool = new pg.Pool({
-    database: "task_manager_test",
+    database: "kanban_board_test",
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     password: process.env.DB_PASSWORD,

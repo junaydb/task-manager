@@ -12,7 +12,7 @@
   "db": {
     "host": "localhost",
     "user": "postgres",
-    "dbName": "task_manager",
+    "dbName": "kanban_board",
     "password": ""
   }
 }
