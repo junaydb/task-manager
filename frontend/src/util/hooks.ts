@@ -11,6 +11,7 @@ import {
   getTaskCount,
   updateTaskStatus,
   deleteTask,
+  getAllTasks,
 } from "./fetchers";
 import type {
   SortOrder,
@@ -25,6 +26,7 @@ import type {
   NoContentResponse,
   TaskCountResponse,
   TaskArrayResponse,
+  TaskArrayResponseWithMeta,
 } from "../types";
 import { AxiosError } from "axios";
 
@@ -123,7 +125,7 @@ export function useGetNextPage(params: {
   sortOrder: SortOrder;
   pageSize: number;
 }) {
-  return useInfiniteQuery<TaskArrayResponse, AxiosError<ErrorPayload>>({
+  return useInfiniteQuery<TaskArrayResponseWithMeta, AxiosError<ErrorPayload>>({
     queryKey: queryKeys.tasks.list(params),
     queryFn: ({ pageParam }) => {
       const cursor = pageParam ? String(pageParam) : undefined;
@@ -140,5 +142,12 @@ export function useGetTaskCount() {
   return useQuery<TaskCountResponse, AxiosError<ErrorPayload>>({
     queryKey: queryKeys.tasks.count(),
     queryFn: () => getTaskCount(),
+  });
+}
+
+export function useGetAllTasks() {
+  return useQuery<TaskArrayResponse, AxiosError<ErrorPayload>>({
+    queryKey: queryKeys.tasks.lists(),
+    queryFn: () => getAllTasks(),
   });
 }

@@ -30,11 +30,15 @@ export type Task = {
 
 export interface TaskResponse extends ApiResponse<Task> {}
 
-export interface TaskArrayResponse extends ApiResponseWithMeta<{ tasks: Task[] }> {}
+export interface TaskArrayResponse extends ApiResponse<{ tasks: Task[] }> {}
 
-export interface UpdateTaskResponse extends ApiResponse<{ newStatus: Status }> {}
+export interface TaskArrayResponseWithMeta
+  extends ApiResponseWithMeta<{ tasks: Task[] }> {}
 
-export interface NoContentResponse extends Omit<ApiResponse, 'data'> {}
+export interface UpdateTaskResponse
+  extends ApiResponse<{ newStatus: Status }> {}
+
+export interface NoContentResponse extends Omit<ApiResponse, "data"> {}
 
 export interface TaskCountResponse extends ApiResponse<{ count: number }> {}
 

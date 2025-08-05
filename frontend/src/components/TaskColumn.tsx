@@ -49,7 +49,7 @@ function TaskColumn({ status }: { status: Status }) {
           <h3 className="font-semibold text-lg">{props.title}</h3>
         </div>
         <div className="flex-1 flex items-center justify-center">
-          <p className="text-muted-foreground">Loading tasks...</p>
+          <LoadingSpinner />
         </div>
       </div>
     );

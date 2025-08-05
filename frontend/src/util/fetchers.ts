@@ -9,6 +9,7 @@ import type {
   NoContentResponse,
   TaskCountResponse,
   TaskArrayResponse,
+  TaskArrayResponseWithMeta,
 } from "../types";
 import { combineDateAndTimeToISO } from "./helpers";
 
@@ -82,9 +83,9 @@ export async function getNextPage(params: {
   sortOrder: SortOrder;
   pageSize: number;
   cursor?: string;
-}): Promise<TaskArrayResponse> {
+}): Promise<TaskArrayResponseWithMeta> {
   return api
-    .get<TaskArrayResponse>(`/page`, {
+    .get<TaskArrayResponseWithMeta>(`/page`, {
       params: {
         status: params.status,
         sortBy: params.sortBy,
@@ -102,4 +103,8 @@ export async function getTaskById({ id }: IdParam): Promise<TaskResponse> {
 
 export async function getTaskCount(): Promise<TaskCountResponse> {
   return api.get<TaskCountResponse>("/count").then((res) => res.data);
+}
+
+export async function getAllTasks(): Promise<TaskArrayResponse> {
+  return api.get<TaskArrayResponseWithMeta>("/all").then((res) => res.data);
 }

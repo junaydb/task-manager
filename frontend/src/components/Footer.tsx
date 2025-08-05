@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function Footer() {
   const [lastCommitTime, setLastCommitTime] = useState<string | null>(null);
@@ -36,7 +37,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-4 text-center">
         <p className="text-xs font-mono text-gray-400">
           {loading ? (
-            <span>Loading...</span>
+            <LoadingSpinner />
           ) : lastCommitTime ? (
             <span>Last updated on {lastCommitTime}.</span>
           ) : null}
@@ -56,4 +57,3 @@ export default function Footer() {
     </footer>
   );
 }
-
