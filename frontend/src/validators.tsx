@@ -1,6 +1,6 @@
 export function validateTitle(value?: string) {
   if (!value) {
-    return "A title is required";
+    return "Required";
   }
   if (value.length > 100) {
     return "Cannot contain more than 100 characters";
@@ -22,7 +22,7 @@ export function validateDueDate(date: string): true | string {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  return selected >= today ? true : "This date must be in the future";
+  return selected >= today ? true : "The date must be in the future";
 }
 
 export function validateDueTime(time: string, dueDate: Date): true | string {
@@ -40,7 +40,7 @@ export function validateDueTime(time: string, dueDate: Date): true | string {
     dueAt.setHours(h, m);
 
     if (dueAt < now) {
-      return "Time must be later than now when date is today";
+      return "Cannot be in the past";
     }
   }
 
