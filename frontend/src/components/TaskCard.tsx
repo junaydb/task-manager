@@ -40,7 +40,7 @@ interface TaskCardProps {
 }
 
 function TaskCard({ task }: TaskCardProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isTaskCardOpen, setIsTaskCardOpen] = useState(false);
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -58,8 +58,8 @@ function TaskCard({ task }: TaskCardProps) {
   return (
     <>
       <ContextMenu>
-        <ContextMenuTrigger className="block">
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <ContextMenuTrigger className="block" disabled={isTaskCardOpen}>
+          <Dialog open={isTaskCardOpen} onOpenChange={setIsTaskCardOpen}>
             <DialogTrigger asChild>
               <Card className="cursor-pointer hover:shadow-md transition-shadow duration-200 bg-white border border-gray-200">
                 <CardContent>
@@ -128,7 +128,8 @@ function TaskCard({ task }: TaskCardProps) {
 
                   <div>
                     <h4 className="font-medium mb-2 flex items-center gap-2">
-                      <CalendarPlus className="w-4 h-4 text-purple-500" /> Created on
+                      <CalendarPlus className="w-4 h-4 text-purple-500" />{" "}
+                      Created on
                     </h4>
                     <p className="text-muted-foreground">{createdDateStr}</p>
                   </div>
@@ -146,16 +147,16 @@ function TaskCard({ task }: TaskCardProps) {
             </DialogContent>
           </Dialog>
         </ContextMenuTrigger>
-        
+
         <ContextMenuContent>
-          <ContextMenuItem 
+          <ContextMenuItem
             onClick={() => setIsStatusModalOpen(true)}
             className="flex items-center gap-2"
           >
             <Edit className="w-4 h-4" />
             Change status
           </ContextMenuItem>
-          <ContextMenuItem 
+          <ContextMenuItem
             onClick={() => setIsDeleteModalOpen(true)}
             className="flex items-center gap-2 text-red-600"
           >
@@ -182,4 +183,3 @@ function TaskCard({ task }: TaskCardProps) {
 }
 
 export default TaskCard;
-
