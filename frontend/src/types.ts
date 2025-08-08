@@ -67,6 +67,3 @@ export type UpdateTaskStatusParams = {
 export type IdParam = {
   id: number;
 };
-
-// Use IdParam instead of DeleteTaskParams for consistency
-export type DeleteTaskParams = IdParam;

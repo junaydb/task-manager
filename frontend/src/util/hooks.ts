@@ -113,7 +113,7 @@ export function useDeleteTask() {
 }
 
 export function useGetTaskById(id: number) {
-  return useQuery<TaskResponse, AxiosError<ErrorPayload>>({
+  return useQuery({
     queryKey: queryKeys.tasks.detail(id),
     queryFn: () => getTaskById({ id }),
   });

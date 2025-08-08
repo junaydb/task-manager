@@ -18,40 +18,12 @@ const api = axios.create({
     import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/tasks",
 });
 
-api.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
-
-api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    if (error.response?.status === 401) {
-      console.error("Unauthorized access");
-    } else if (error.response?.status === 404) {
-      console.error("Resource not found");
-    } else if (error.response?.status >= 500) {
-      console.error("Server error");
-    } else if (!error.response) {
-      console.error("Network error - please check your connection");
-    }
-
-    return Promise.reject(error);
-  },
-);
-
 export async function createTask(params: {
   title: string;
   dueDate: string;
   dueTime: string;
   description?: string;
-}): Promise<TaskResponse> {
+}) {
   const isoDateTime = combineDateAndTimeToISO(params.dueDate, params.dueTime);
   return api
     .post<TaskResponse>("", {
@@ -62,10 +34,7 @@ export async function createTask(params: {
     .then((res) => res.data);
 }
 
-export async function updateTaskStatus(params: {
-  id: number;
-  status: Status;
-}): Promise<UpdateTaskResponse> {
+export async function updateTaskStatus(params: { id: number; status: Status }) {
   return api
     .patch<UpdateTaskResponse>(`/status/${params.id}`, {
       status: params.status,
@@ -73,7 +42,7 @@ export async function updateTaskStatus(params: {
     .then((res) => res.data);
 }
 
-export async function deleteTask({ id }: IdParam): Promise<NoContentResponse> {
+export async function deleteTask({ id }: IdParam) {
   return api.delete<NoContentResponse>(`/${id}`).then((res) => res.data);
 }
 
@@ -83,7 +52,7 @@ export async function getNextPage(params: {
   sortOrder: SortOrder;
   pageSize: number;
   cursor?: string;
-}): Promise<TaskArrayResponseWithMeta> {
+}) {
   return api
     .get<TaskArrayResponseWithMeta>(`/page`, {
       params: {
@@ -97,14 +66,14 @@ export async function getNextPage(params: {
     .then((res) => res.data);
 }
 
-export async function getTaskById({ id }: IdParam): Promise<TaskResponse> {
+export async function getTaskById({ id }: IdParam) {
   return api.get<TaskResponse>(`/${id}`).then((res) => res.data);
 }
 
-export async function getTaskCount(): Promise<TaskCountResponse> {
+export async function getTaskCount() {
   return api.get<TaskCountResponse>("/count").then((res) => res.data);
 }
 
-export async function getAllTasks(): Promise<TaskArrayResponse> {
-  return api.get<TaskArrayResponseWithMeta>("/all").then((res) => res.data);
+export async function getAllTasks() {
+  return api.get<TaskArrayResponse>("/all").then((res) => res.data);
 }
