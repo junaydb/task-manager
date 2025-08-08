@@ -3,7 +3,7 @@ import { useGetNextPage } from "../util/hooks";
 import TaskCard from "./TaskCard";
 import LoadingSpinner from "./LoadingSpinner";
 import { useInView } from "react-intersection-observer";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const columnProps = {
   TODO: {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDeleteTask } from "../util/hooks";
-import { DeleteTaskParams } from "../types";
+import { IdParam } from "../types";
 import { Button } from "@/components/ui/button";
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 }
 
 function DeleteTaskConfirmation({ id, onClose }: Props) {
-  const [submittedData, setSubmittedData] = useState<DeleteTaskParams | null>(null);
+  const [submittedData, setSubmittedData] = useState<IdParam | null>(null);
 
   const { mutate } = useDeleteTask();
 
