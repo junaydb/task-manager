@@ -20,6 +20,25 @@ const columnProps = {
   },
 };
 
+function ColumnContainer({
+  colProps,
+  children,
+}: {
+  colProps: typeof columnProps.TODO;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className={`flex flex-col h-full min-h-[600px] rounded-xs border-2 ${colProps.className} p-4`}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-semibold text-lg">{colProps.title}</h3>
+      </div>
+      {children}
+    </div>
+  );
+}
+
 function TaskColumn({ status }: { status: Status }) {
   const { isPending, data, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useGetNextPage({
@@ -42,27 +61,16 @@ function TaskColumn({ status }: { status: Status }) {
 
   if (isPending) {
     return (
-      <div
-        className={`flex flex-col h-full min-h-[600px] rounded-xs border-2 ${props.className} p-4`}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-lg">{props.title}</h3>
-        </div>
+      <ColumnContainer colProps={props}>
         <div className="flex-1 flex items-center justify-center">
           <LoadingSpinner />
         </div>
-      </div>
+      </ColumnContainer>
     );
   }
 
   return (
-    <div
-      className={`flex flex-col h-full min-h-[600px] rounded-xs border-2 ${props.className} p-4`}
-    >
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-lg">{props.title}</h3>
-      </div>
-
+    <ColumnContainer colProps={props}>
       <div className="flex-1 space-y-3 overflow-y-auto">
         {allTasks.length === 0 ? (
           <div className="flex items-center justify-center h-32 text-muted-foreground text-sm">
@@ -81,7 +89,7 @@ function TaskColumn({ status }: { status: Status }) {
           </>
         )}
       </div>
-    </div>
+    </ColumnContainer>
   );
 }
 
