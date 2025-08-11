@@ -21,9 +21,6 @@ function SearchModal() {
 
   const allTasks = data?.data.tasks || [];
 
-  console.log(allTasks);
-
-  // Filter tasks based on search term
   const filteredTasks = allTasks.filter((task) =>
     task.title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
