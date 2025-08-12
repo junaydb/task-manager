@@ -8,9 +8,15 @@ dependencies:
   '@hono/node-server':
     specifier: ^1.14.1
     version: 1.14.1(hono@4.7.6)
+  '@hono/trpc-server':
+    specifier: ^0.4.0
+    version: 0.4.0(@trpc/server@11.4.4)(hono@4.7.6)
   '@pgtyped/runtime':
     specifier: ^2.4.2
     version: 2.4.2
+  '@trpc/server':
+    specifier: ^11.4.4
+    version: 11.4.4(typescript@5.8.3)
   hono:
     specifier: ^4.7.6
     version: 4.7.6
@@ -487,6 +493,17 @@ packages:
       hono: 4.7.6
     dev: false
 
+  /@hono/trpc-server@0.4.0(@trpc/server@11.4.4)(hono@4.7.6):
+    resolution: {integrity: sha512-LGlJfCmNIGMwcknZEIYdujVMs9OkNVazhpOhaz3kTWOXvNL660VOHpvvktosCiJrajyBY1RtIJKQ+IKaQvNuSg==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      '@trpc/server': ^10.10.0 || >11.0.0-rc
+      hono: '>=4.*'
+    dependencies:
+      '@trpc/server': 11.4.4(typescript@5.8.3)
+      hono: 4.7.6
+    dev: false
+
   /@isaacs/cliui@8.0.2:
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
     engines: {node: '>=12'}
@@ -906,6 +923,14 @@ packages:
     resolution: {integrity: sha512-xxeapPiUXdZAE3che6f3xogoJPeZgig6omHEy1rIY5WVsB3H2BHNnZH+gHG6x91SCWyQCzWGsuL2Hh3ClO5/qQ==}
     requiresBuild: true
     dev: true
+
+  /@trpc/server@11.4.4(typescript@5.8.3):
+    resolution: {integrity: sha512-VkJb2xnb4rCynuwlCvgPBh5aM+Dco6fBBIo6lWAdJJRYVwtyE5bxNZBgUvRRz/cFSEAy0vmzLxF7aABDJfK5Rg==}
+    peerDependencies:
+      typescript: '>=5.7.2'
+    dependencies:
+      typescript: 5.8.3
+    dev: false
 
   /@types/estree@1.0.7:
     resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
@@ -1766,7 +1791,6 @@ packages:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: true
 
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}

@@ -2,19 +2,21 @@ import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
-import tasks from "./routes/tasks.js";
 import type { Context } from "hono";
 import { ZodError } from "zod";
 import { errorResponse } from "./util/responseWrappers.js";
 import { TaskNotFoundError } from "./util/errors.js";
 import { cors } from "hono/cors";
+import { appRouter } from "./trpc.js";
+import { trpcServer } from "@hono/trpc-server";
 
 const app = new Hono();
 
 app.use(logger());
 app.use("/favicon.ico", serveStatic({ path: "./favicon.ico" }));
+// TODO: disable cors in prod environment
 app.use(
-  "/api/*",
+  "/api/trpc/*",
   cors({
     origin: "*",
     allowMethods: ["GET", "POST", "PATCH", "DELETE"],
@@ -23,13 +25,11 @@ app.use(
     maxAge: 600,
     credentials: true,
   }),
+  trpcServer({
+    endpoint: "/api/trpc",
+    router: appRouter,
+  }),
 );
-
-app.get("/", (c) => {
-  return c.json({ message: "Welcome to the Task Management API." });
-});
-
-app.route("/api/tasks", tasks);
 
 app.onError((err, c: Context) => {
   if (err instanceof ZodError) {
