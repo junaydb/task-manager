@@ -32,3 +32,13 @@ export const successResponse = {
     return { success: true };
   },
 };
+
+export function errorResponse(message: string, errors?: {} | []) {
+  if (!errors) {
+    return { success: false, message: message };
+  }
+  if (Array.isArray(errors)) {
+    return { success: false, message: message, errors: errors };
+  }
+  return { success: false, message: message, errors: { ...errors } };
+}
