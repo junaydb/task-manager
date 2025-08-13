@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import LoadingSpinner from "./LoadingSpinner";
 
 export default function Footer() {
@@ -9,10 +8,11 @@ export default function Footer() {
   useEffect(() => {
     const fetchLastCommitTime = async () => {
       try {
-        const response = await axios.get(
+        const response = await fetch(
           "https://api.github.com/repos/junaydb/task-manager/commits/main",
         );
-        const commitDate = new Date(response.data.commit.committer.date);
+        const data = await response.json();
+        const commitDate = new Date(data.commit.committer.date);
 
         const formattedDate = commitDate.toLocaleDateString();
         const formattedTime = commitDate.toLocaleTimeString([], {
