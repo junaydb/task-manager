@@ -7,7 +7,7 @@ import { ZodError } from "zod";
 import { errorResponse } from "./util/responseWrappers.js";
 import { TaskNotFoundError } from "./util/errors.js";
 import { cors } from "hono/cors";
-import { appRouter } from "./trpc.js";
+import { appRouter } from "./trpc/appRouter.js";
 import { trpcServer } from "@hono/trpc-server";
 
 const app = new Hono();

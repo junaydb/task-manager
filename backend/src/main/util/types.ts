@@ -1,3 +1,5 @@
+import type { IGetAllTasksResult as Task } from "../queries/taskQueries.queries.js";
+import type { status } from "../queries/taskQueries.queries.js";
 import { z } from "zod";
 import {
   ByCreatedCursorSchema,
@@ -16,18 +18,22 @@ export interface ApiResponse<T = any> {
   data: T;
 }
 
-export type Cursor = { cursor: string | null };
-
 export interface ApiResponseWithMeta<T = any> extends ApiResponse<T> {
   meta: Cursor;
 }
 
-export type ErrorMessage = {
-  param: string;
-  message: string;
-};
-export interface ErrorPayload {
-  success: boolean;
-  message: string;
-  errors?: ErrorMessage[];
-}
+export interface TaskResponse extends ApiResponse<Task> {}
+
+export interface TaskArrayResponse extends ApiResponse<{ tasks: Task[] }> {}
+
+export interface TaskArrayResponseWithMeta
+  extends ApiResponseWithMeta<{ tasks: Task[] }> {}
+
+export interface TaskUpdateResponse 
+  extends ApiResponse<{ newStatus: status }> {}
+
+export interface NoContentResponse extends Omit<ApiResponse, "data"> {}
+
+export interface TaskCountResponse extends ApiResponse<{ count: number }> {}
+
+export type Cursor = { cursor: string | null };

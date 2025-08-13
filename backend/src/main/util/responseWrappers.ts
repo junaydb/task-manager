@@ -1,29 +1,34 @@
 import type {
-  ApiResponse,
-  ApiResponseWithMeta,
+  IGetAllTasksResult as Task,
+  status,
+} from "../queries/taskQueries.queries.js";
+import type {
   Cursor,
-  ErrorMessage,
-  ErrorPayload,
+  NoContentResponse,
+  TaskArrayResponse,
+  TaskCountResponse,
+  TaskResponse,
+  TaskArrayResponseWithMeta,
+  TaskUpdateResponse,
 } from "./types.js";
 
-// Standard response format:
-// Consumers can check if the request succeeded via the `success` field.
-// Errors will always contain a message and sometimes more detailed error information in the `errors` field.
-
-export function successResponse(data?: {}): ApiResponse {
-  return { success: true, data: { ...data } };
-}
-
-export function successResponseWithMeta(
-  data: {},
-  meta: Cursor,
-): ApiResponseWithMeta {
-  return { success: true, data: { ...data }, meta: meta };
-}
-
-export function errorResponse(
-  message: string,
-  errors?: ErrorMessage[],
-): ErrorPayload {
-  return { success: false, message: message, errors: errors };
-}
+export const successResponse = {
+  single: (data: Task): TaskResponse => {
+    return { success: true, data: { ...data } };
+  },
+  array: (data: Task[]): TaskArrayResponse => {
+    return { success: true, data: { tasks: data } };
+  },
+  withMeta: (data: Task[], meta: Cursor): TaskArrayResponseWithMeta => {
+    return { success: true, data: { tasks: data }, meta: meta };
+  },
+  count: (data: number): TaskCountResponse => {
+    return { success: true, data: { count: data } };
+  },
+  newStatus: (data: status): TaskUpdateResponse => {
+    return { success: true, data: { newStatus: data } };
+  },
+  empty: (): NoContentResponse => {
+    return { success: true };
+  },
+};

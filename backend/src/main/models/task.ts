@@ -13,7 +13,6 @@ import {
 } from "../queries/taskQueries.queries.js";
 import type {
   IFindByIdResult as ITask,
-  IUpdateStatusResult,
   IGetTasksByCreatedDescParams,
   IFindByIdParams,
   IUpdateStatusParams,
@@ -38,7 +37,7 @@ class Task {
   /**
    * Returns all tasks from the database, ordered by creation date in descending order.
    */
-  static async getAll(): Promise<ITask[]> {
+  static async getAll() {
     const allTasks = await getAllTasks.run(undefined, pool);
 
     if (allTasks.length === 0) {
@@ -51,7 +50,7 @@ class Task {
   /**
    * Returns the number of tasks in the database.
    */
-  static async getNumTasks(): Promise<number> {
+  static async getNumTasks() {
     const numTasks = await getNumTasks.run(undefined, pool);
     return parseInt(numTasks[0].count);
   }
@@ -64,7 +63,7 @@ class Task {
   static async getTasksByCreated(
     sortOrder: SortOrder,
     pageParams: IGetTasksByCreatedDescParams,
-  ): Promise<ITask[]> {
+  ) {
     let page: ITask[];
 
     if (sortOrder == "DESC") {
@@ -90,7 +89,7 @@ class Task {
   static async getTasksByCreatedSafe(
     sortOrder: SortOrder,
     pageParams: IGetTasksByCreatedDescParams,
-  ): Promise<ITask[]> {
+  ) {
     let page: ITask[];
 
     if (sortOrder == "DESC") {
@@ -110,7 +109,7 @@ class Task {
   static async getTasksByDueDate(
     sortOrder: SortOrder,
     pageParams: IGetTasksByDueDateDescParams,
-  ): Promise<ITask[]> {
+  ) {
     let page: ITask[];
 
     if (sortOrder == "DESC") {
@@ -136,7 +135,7 @@ class Task {
   static async getTasksByDueDateSafe(
     sortOrder: SortOrder,
     pageParams: IGetTasksByDueDateDescParams,
-  ): Promise<ITask[]> {
+  ) {
     let page: ITask[];
 
     if (sortOrder == "DESC") {
@@ -165,9 +164,7 @@ class Task {
    * Updates the status of task with id `id` in the database and returns the
    * updated status.
    */
-  static async updateStatus(
-    params: IUpdateStatusParams,
-  ): Promise<IUpdateStatusResult> {
+  static async updateStatus(params: IUpdateStatusParams) {
     const result = await updateStatus.run(params, pool);
 
     if (result.length === 0) {
@@ -193,7 +190,7 @@ class Task {
   /**
    * Inserts the task into the database and returns the inserted task.
    */
-  static async save(params: IInsertTaskParams): Promise<ITask> {
+  static async save(params: IInsertTaskParams) {
     const result = await insertTask.run(params, pool);
 
     return result[0];

@@ -1,9 +1,6 @@
 import type { IGetTasksByCreatedAscParams as IPageParams } from "../queries/taskQueries.queries.js";
 import Task from "../models/Task.js";
-import {
-  successResponse,
-  successResponseWithMeta,
-} from "../util/responseWrappers.js";
+import { successResponse } from "../util/responseWrappers.js";
 import {
   TaskIdParamSchema,
   CreateTaskSchema,
@@ -11,7 +8,7 @@ import {
   PaginationQuerySchema,
 } from "./tasks.schemas.js";
 import * as pagination from "../util/pagination.js";
-import { publicProcedure, router } from "../trpc.js";
+import { publicProcedure, router } from "../trpc/trpc.js";
 
 /*
  * All routes that take parameters validate those parameters using Zod schemas.
@@ -27,12 +24,12 @@ import { publicProcedure, router } from "../trpc.js";
 export const tasksRouter = router({
   getAll: publicProcedure.query(async () => {
     const allTasks = await Task.getAll();
-    return successResponse({ tasks: allTasks });
+    return successResponse.array(allTasks);
   }),
 
   getCount: publicProcedure.query(async () => {
     const numTasks = await Task.getNumTasks();
-    return successResponse({ count: numTasks });
+    return successResponse.count(numTasks);
   }),
 
   getPage: publicProcedure
@@ -62,13 +59,13 @@ export const tasksRouter = router({
         nextCursor = pagination.encodeCursor(cursor);
       }
 
-      return successResponseWithMeta({ tasks: page }, { cursor: nextCursor });
+      return successResponse.withMeta(page, { cursor: nextCursor });
     }),
 
   getById: publicProcedure.input(TaskIdParamSchema).query(async ({ input }) => {
     const { id } = input;
     const task = await Task.findById({ taskId: id });
-    return successResponse(task);
+    return successResponse.single(task);
   }),
 
   create: publicProcedure
@@ -76,7 +73,7 @@ export const tasksRouter = router({
     .mutation(async ({ input }) => {
       const { title, status, due_date, description } = input;
       const task = await Task.save({ title, status, due_date, description });
-      return successResponse({ task: { ...task } });
+      return successResponse.single(task);
     }),
 
   updateStatus: publicProcedure
@@ -84,7 +81,7 @@ export const tasksRouter = router({
     .mutation(async ({ input }) => {
       const { id, status } = input;
       const result = await Task.updateStatus({ taskId: id, newStatus: status });
-      return successResponse({ new_status: result.status });
+      return successResponse.newStatus(result.status);
     }),
 
   delete: publicProcedure
@@ -92,6 +89,6 @@ export const tasksRouter = router({
     .mutation(async ({ input }) => {
       const { id } = input;
       await Task.delete({ taskId: id });
-      return successResponse();
+      return successResponse.empty();
     }),
 });
