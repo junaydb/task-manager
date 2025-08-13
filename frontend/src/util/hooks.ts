@@ -1,153 +1,37 @@
-import {
-  useQuery,
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import {
-  createTask,
-  getTaskById,
-  getNextPage,
-  getTaskCount,
-  updateTaskStatus,
-  deleteTask,
-  getAllTasks,
-} from "./fetchers";
-import type {
-  SortOrder,
-  SortBy,
-  Status,
-  CreateTaskParams,
-  UpdateTaskStatusParams,
-  ErrorPayload,
-  TaskResponse,
-  UpdateTaskResponse,
-  IdParam,
-  NoContentResponse,
-  TaskCountResponse,
-  TaskArrayResponse,
-  TaskArrayResponseWithMeta,
-} from "../types";
-import { AxiosError } from "axios";
-
-// Query key factory for consistent key management
-const queryKeys = {
-  tasks: {
-    all: ["tasks"],
-    lists: () => [...queryKeys.tasks.all, "list"],
-    list: (params: object) => [...queryKeys.tasks.lists(), params],
-    details: () => [...queryKeys.tasks.all, "detail"],
-    detail: (id: number) => [...queryKeys.tasks.details(), id],
-    count: () => [...queryKeys.tasks.all, "count"],
-  },
-};
+import { inferInput, inferOutput } from "@trpc/tanstack-react-query";
+import { trpc } from "./trpc";
+import { useMutation, useQuery, useInfiniteQuery } from "@tanstack/react-query";
 
 export function useCreateTask() {
-  const queryClient = useQueryClient();
-
-  return useMutation<TaskResponse, AxiosError<ErrorPayload>, CreateTaskParams>({
-    mutationFn: (params) => {
-      if (!params) {
-        throw new Error("CreateTask parameters are required");
-      }
-      return createTask(params);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.all });
-    },
-    onError: (error) => {
-      console.error(
-        "Failed to create task:",
-        error.response?.data?.message || error.message,
-      );
-    },
-  });
+  return useMutation(trpc.tasks.create.mutationOptions());
 }
 
 export function useUpdateTaskStatus() {
-  const queryClient = useQueryClient();
-
-  return useMutation<
-    UpdateTaskResponse,
-    AxiosError<ErrorPayload>,
-    UpdateTaskStatusParams
-  >({
-    mutationFn: (params) => {
-      if (!params) {
-        throw new Error("UpdateTaskStatus parameters are required");
-      }
-      return updateTaskStatus(params);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.all });
-    },
-    onError: (error) => {
-      console.error(
-        "Failed to update task status:",
-        error.response?.data?.message || error.message,
-      );
-    },
-  });
+  return useMutation(trpc.tasks.updateStatus.mutationOptions());
 }
 
 export function useDeleteTask() {
-  const queryClient = useQueryClient();
-
-  return useMutation<NoContentResponse, AxiosError<ErrorPayload>, IdParam>({
-    mutationFn: (params) => {
-      if (!params) {
-        throw new Error("DeleteTask parameters are required");
-      }
-      return deleteTask(params);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.all });
-    },
-    onError: (error) => {
-      console.error(
-        "Failed to delete task:",
-        error.response?.data?.message || error.message,
-      );
-    },
-  });
+  return useMutation(trpc.tasks.delete.mutationOptions());
 }
 
-export function useGetTaskById(id: number) {
-  return useQuery({
-    queryKey: queryKeys.tasks.detail(id),
-    queryFn: () => getTaskById({ id }),
-  });
+export function useGetTaskById(id: inferInput<typeof trpc.tasks.getById>) {
+  return useQuery(trpc.tasks.getById.queryOptions(id));
 }
 
-export function useGetNextPage(params: {
-  status: Status;
-  sortBy: SortBy;
-  sortOrder: SortOrder;
-  pageSize: number;
-}) {
-  return useInfiniteQuery<TaskArrayResponseWithMeta, AxiosError<ErrorPayload>>({
-    queryKey: queryKeys.tasks.list(params),
-    queryFn: ({ pageParam }) => {
-      const cursor = pageParam ? String(pageParam) : undefined;
-      return getNextPage({ ...params, cursor });
-    },
-    initialPageParam: null,
-    getNextPageParam: (lastPage) => {
-      return lastPage.meta.cursor || undefined;
-    },
-  });
+export function useGetNextPage(params: inferInput<typeof trpc.tasks.getPage>) {
+  return useInfiniteQuery(
+    trpc.tasks.getPage.infiniteQueryOptions(params, {
+      // initialPageParam: undefined as string | undefined,
+      getNextPageParam: (lastPage: inferOutput<typeof trpc.tasks.getPage>) =>
+        lastPage.meta.cursor || undefined,
+    }),
+  );
 }
 
 export function useGetTaskCount() {
-  return useQuery<TaskCountResponse, AxiosError<ErrorPayload>>({
-    queryKey: queryKeys.tasks.count(),
-    queryFn: () => getTaskCount(),
-  });
+  return useQuery(trpc.tasks.getCount.queryOptions());
 }
 
 export function useGetAllTasks() {
-  return useQuery<TaskArrayResponse, AxiosError<ErrorPayload>>({
-    queryKey: queryKeys.tasks.lists(),
-    queryFn: () => getAllTasks(),
-  });
+  return useQuery(trpc.tasks.getAll.queryOptions());
 }

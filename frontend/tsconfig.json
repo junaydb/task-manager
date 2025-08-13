@@ -13,6 +13,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@backend/*": [
+        "../backend/src/main/*"
       ]
     }
   }

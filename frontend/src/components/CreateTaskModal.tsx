@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import {
   validateTitle,
   validateDescription,
@@ -7,7 +7,6 @@ import {
   validateDueTime,
 } from "../validators";
 import { useCreateTask } from "../util/hooks";
-import { CreateTaskParams } from "../types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,6 +18,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { combineDateAndTimeToISO } from "@/util/helpers";
+
+type Inputs = {
+  title: string;
+  description?: string;
+  dueDate: string;
+  dueTime: string;
+};
 
 // Round the time to the nearest next half hour
 function getRoundedTime() {
@@ -32,9 +39,7 @@ function getRoundedTime() {
 
 function CreateTaskModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const [submittedData, setSubmittedData] = useState<CreateTaskParams | null>(
-    null,
-  );
+  const [submittedData, setSubmittedData] = useState<Inputs | null>(null);
 
   const now = getRoundedTime();
   const hh = String(now.getHours()).padStart(2, "0");
@@ -47,7 +52,7 @@ function CreateTaskModal() {
     getValues,
     reset,
     formState: { errors },
-  } = useForm<CreateTaskParams>({
+  } = useForm<Inputs>({
     reValidateMode: "onSubmit",
     defaultValues: {
       dueDate: nowDateIso,
@@ -57,9 +62,15 @@ function CreateTaskModal() {
 
   const { mutate } = useCreateTask();
 
-  const onSubmit = (params: CreateTaskParams) => {
+  const onSubmit: SubmitHandler<Inputs> = (params) => {
+    const isoDateTime = combineDateAndTimeToISO(params.dueDate, params.dueTime);
+
     setSubmittedData(params);
-    mutate(params!);
+    mutate({
+      title: params.title,
+      description: params.description,
+      due_date: isoDateTime,
+    });
   };
 
   const handleAddAnother = () => {

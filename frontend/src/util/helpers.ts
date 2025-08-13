@@ -1,4 +1,4 @@
-import { Status } from "../types";
+import type { Status } from "@/types";
 
 export function statusEnumToDisplay(status: Status) {
   const statusMapper = {
@@ -17,15 +17,4 @@ export function getSetStatusOptions(status: Status) {
 
 export function combineDateAndTimeToISO(date: string, time: string): string {
   return new Date(`${date}T${time}`).toISOString();
-}
-
-export function formatDateForDisplay(date: Date): string {
-  return date.toLocaleDateString();
-}
-
-export function formatTimeForDisplay(date: Date): string {
-  return date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 }

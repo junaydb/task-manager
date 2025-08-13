@@ -20,6 +20,10 @@ import ModalButton from "./ModalButton";
 import SelectStatusForm from "./SelectStatusForm";
 import DeleteTaskConfirmation from "./DeleteConfirmation";
 
+interface TaskCardProps {
+  task: Task;
+}
+
 const columnProps = {
   TODO: {
     title: "TO DO",
@@ -34,10 +38,6 @@ const columnProps = {
     badgeClassName: "bg-green-100 text-green-800",
   },
 };
-
-interface TaskCardProps {
-  task: Task;
-}
 
 function TaskCard({ task }: TaskCardProps) {
   const [isTaskCardOpen, setIsTaskCardOpen] = useState(false);

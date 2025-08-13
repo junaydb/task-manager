@@ -14,6 +14,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@backend/*": [
+        "../backend/src/main/*"
       ]
     },
     /* Bundler mode */

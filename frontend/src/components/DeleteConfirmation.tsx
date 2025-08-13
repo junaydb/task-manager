@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useDeleteTask } from "../util/hooks";
-import { IdParam } from "../types";
+import { RouterInput } from "../types";
 import { Button } from "@/components/ui/button";
+
+type IdParam = RouterInput["tasks"]["delete"];
 
 interface Props {
   id: number;
@@ -24,7 +26,9 @@ function DeleteTaskConfirmation({ id, onClose }: Props) {
     return (
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">Are you sure?</h3>
-        <p className="text-sm text-muted-foreground">This action cannot be undone</p>
+        <p className="text-sm text-muted-foreground">
+          This action cannot be undone
+        </p>
         <div className="flex space-x-2">
           <Button variant="destructive" onClick={onConfirm} className="flex-1">
             Confirm

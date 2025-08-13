@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useUpdateTaskStatus } from "../util/hooks";
-import { UpdateTaskStatusParams } from "../types";
 import { statusEnumToDisplay, getSetStatusOptions } from "../util/helpers";
-import type { Status } from "../types";
+import type { RouterInput, Status } from "../types";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+
+type UpdateTaskStatusParams = RouterInput["tasks"]["updateStatus"];
 
 interface Props {
   id: number;
